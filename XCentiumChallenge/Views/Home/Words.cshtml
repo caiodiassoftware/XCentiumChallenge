@@ -1,0 +1,89 @@
+﻿@using XCentiumChallenge.ViewModel
+@model ResultViewModel<WordsCounterViewModel>
+@{
+    ViewBag.Title = "Words";
+}
+
+<div class="jumbotron">
+    <h1>Words</h1>
+    <p class="lead">Count all the words (display the total) and display the top 7 occurring words and their count (either as a table or chart of some kind, again you choose or write your own)</p>
+    <p><a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">Home</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("Words", "Home", FormMethod.Get))
+        {
+            <input type="search" name="url" />
+            <input type="submit" id="btnSave" value="Search Words" />
+        }
+    </div>
+</div>
+
+
+@if (Model.HasErrors())
+{
+    <div class="row">
+        <p class="lead">Please try again. An error happened.</p>
+        @foreach (var error in Model.Errors)
+        {
+            <p class="lead">@error</p>
+        }
+    </div>
+}
+else if (Model.HasModel())
+{
+    <div class="row">
+        <div class="col-md-4">
+            <h1>@Model.Model.Total word(s)</h1>
+        </div>
+    </div>
+
+    if (Model.Model.HasWords())
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Most frenquent words</h1>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Word</th>
+                        <th scope="col">Occurency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var word in Model.Model.GetRanking())
+                    {
+                        <tr>
+                            <td>@word.Key</td>
+                            <td>@word.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="col-md-4">
+                <h1>All Words</h1>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Word</th>
+                        <th scope="col">Occurency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var word in Model.Model.WordOccurency)
+                    {
+                        <tr>
+                            <td>@word.Key</td>
+                            <td>@word.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
